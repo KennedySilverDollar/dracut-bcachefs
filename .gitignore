@@ -1,0 +1,7 @@
+# xbps-srcの成果
+hostdir/
+*.xbps
+
+# From editor/os
+*.swp
+.DS_Store
