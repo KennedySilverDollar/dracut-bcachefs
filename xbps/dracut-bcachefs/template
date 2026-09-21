@@ -1,0 +1,23 @@
+# Template file for 'dracut-bcachefs'
+pkgname=dracut-bcachefs
+version=0.1.0
+revision=1
+build_style=meta
+depends="dracut bcachefs-tools"
+short_desc="dracut integration module for bcachefs root filesystem"
+maintainer="KennedySilverDollar <kenshinlights@tutamail.com>"
+license="GPL-2.0-or-later"
+homepage="https://github.com/KennedySilverDollar/dracut-bcachefs"
+# Not intended for upstream submission (void-packages/dracut/
+# bcachefs-tools) -- independent package, built locally only.
+# build_style=meta skips configure/make entirely; do_install() is
+# the only phase that runs.
+
+do_install(){
+vmkdir usr/lib/dracut/modules.d/70bcachefs
+vcopy "${FILESDIR}/70bcachefs/module-setup.sh" \
+usr/lib/dracut/modules.d/70bcachefs/module-setup.sh
+vcopy "${FILESDIR}/70bcachefs/bcachefs_timeout.sh" \
+usr/lib/dracut/modules.d/70bcachefs/bcachefs_timeout.sh
+chmod +x "${DESTDIR}/usr/lib/dracut/modules.d/70bcachefs/"*.sh
+}

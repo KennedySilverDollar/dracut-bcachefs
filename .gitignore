@@ -1,7 +1,8 @@
-# xbps-srcの成果
+# xbps-src build artifacts (generated in a void-packages checkout,
+# not in this repo)
 hostdir/
 *.xbps
 
-# From editor/os
+# editor/os cruft
 *.swp
 .DS_Store
