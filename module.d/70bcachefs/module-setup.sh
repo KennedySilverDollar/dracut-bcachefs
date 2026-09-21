@@ -71,7 +71,7 @@ install(){
   # symlinks explicitly, since some dracut/initqueue internals
   # invoke filesystem tools by the fsck.<fstype> / mount.<fstype>
   # convention rather than relying on PATH resolution alone.
-  inst_mutiple -o fsck.bcachefs mount.bcachefs
+  inst_multiple -o fsck.bcachefs mount.bcachefs
   inst bcachefs /sbin/bcachefs
 
   # Only emit the cmdline() output as a conf file when building a

@@ -1,8 +1,7 @@
 # Template file for 'dracut-bcachefs'
 pkgname=dracut-bcachefs
 version=0.1.0
-revision=1
-build_style=meta
+revision=2
 depends="dracut bcachefs-tools"
 short_desc="dracut integration module for bcachefs root filesystem"
 maintainer="KennedySilverDollar <kenshinlights@tutamail.com>"
@@ -10,7 +9,7 @@ license="GPL-2.0-or-later"
 homepage="https://github.com/KennedySilverDollar/dracut-bcachefs"
 # Not intended for upstream submission (void-packages/dracut/
 # bcachefs-tools) -- independent package, built locally only.
-# build_style=meta skips configure/make entirely; do_install() is
+# metapackage=yes skips configure/make entirely; do_install() is
 # the only phase that runs.
 
 do_install(){
