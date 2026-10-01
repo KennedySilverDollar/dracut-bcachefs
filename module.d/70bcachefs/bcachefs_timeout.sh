@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 # 70bcachefs/bcachefs_timeout.sh
 #
 # Runs when initqueue times out waiting for the root device.

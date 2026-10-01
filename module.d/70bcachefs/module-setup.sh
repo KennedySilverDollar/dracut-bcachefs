@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-2.0-or-later
 # 70bcachefs/module-setup.sh
 #
 # dracut integration module for bcachefs.
