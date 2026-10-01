@@ -6,3 +6,5 @@ hostdir/
 # editor/os cruft
 *.swp
 .DS_Store
+# JetBrains IDE settings
+.idea/
