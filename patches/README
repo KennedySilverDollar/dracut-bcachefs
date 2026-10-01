@@ -4,3 +4,5 @@ bcachefs-tools-772d5cd02-musl-statx.patch
   not found on the musl target (cause not traced).
   Verified: the patched tree built on Void musl and `show-super` printed
   version 1.39. May not apply to other commits.
+  Checked: `git apply --check --reverse` against the tree that built
+  succeeds, so this file matches what was built.

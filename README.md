@@ -33,6 +33,7 @@ an integrated module for dracut. This repository fills that gap.
   hand. Sprout-specific. UNTESTED: syntax-checked only, never run end to end.
 - patches/ - a patch for building bcachefs-tools on musl (see
   patches/README for the exact base commit)
+- docs/ - notes from the 2026-10-01 mainline report (mainline.md, musl-userland.md)
 
 ## Install (local build)
 
