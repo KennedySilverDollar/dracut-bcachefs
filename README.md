@@ -28,6 +28,11 @@ an integrated module for dracut. This repository fills that gap.
 - scripts/sync-to-void-packages.sh - copies the module + template
   into a local void-packages checkout for building (build-only;
   never pushed upstream)
+- contrib/esp-deploy-sprout.sh - copies a kernel and a verified initramfs
+  to the ESP under new names and prints a Sprout TOML entry to append by
+  hand. Sprout-specific. UNTESTED: syntax-checked only, never run end to end.
+- patches/ - a patch for building bcachefs-tools on musl (see
+  patches/README for the exact base commit)
 
 ## Install (local build)
 
@@ -53,6 +58,8 @@ lsinitrd /boot/initramfs-<version>.img | grep -i bcachefs
 
 One machine, one setup. This is not a compatibility guarantee.
 
+musl (initramfs booted):
+
 | Item | Version |
 |---|---|
 | OS | Void Linux (musl), x86_64 |
@@ -71,6 +78,25 @@ One machine, one setup. This is not a compatibility guarantee.
     "installkernel failed in module bcachefs", exits 1, and writes no
     image.
 
+glibc (initramfs build only, not booted):
+
+| Item | Version |
+|---|---|
+| OS | Void Linux (glibc) in a Bedrock stratum, x86_64 |
+| dracut | 112_1 |
+| Kernel / module | 7.2.8_1, v1.39.6-2-g772d5cd02021 (shared /lib/modules) |
+| bcachefs-tools | 1.36.1_1 (Void package) |
+
+- The module directory was copied into the stratum by hand (identical to
+  this repository); the xbps package was not built on glibc.
+- Kernel with a bcachefs module (7.2.8_1): the build succeeds and the image
+  contains bcachefs.ko.zst, its module dependencies (raid6_pq, xor,
+  lz4hc_compress, libchacha, libpoly1305), /usr/bin/bcachefs, the
+  fsck/mount symlinks, the udev rule, the timeout hook, and every library
+  `ldd` lists for bcachefs.
+- Kernel without one (7.2.7_1): dracut stops with
+  "installkernel failed in module bcachefs", exits 1, writes no image.
+
 ## Notes
 
 - `--no-hostonly-cmdline` does not write `rd.driver.pre=bcachefs` into
@@ -83,10 +109,15 @@ One machine, one setup. This is not a compatibility guarantee.
   bootloader. The cause was not traced into dracut itself.
 - A new kernel needs a bcachefs module built for it. If the DKMS build
   fails, the initramfs build now stops; fix the DKMS build first.
+- Running dracut inside a Bedrock stratum also pulls Bedrock's
+  /bedrock/cross stubs and firmware into the image (seen on both musl and
+  glibc). The image that booted on musl contains them too.
 
 ## Not verified
 
 - Booting an initramfs built with revision 0.1.0_3.
+- Booting an initramfs built on glibc.
+- Building the xbps package on a glibc host.
 - Whether an existing /boot/initramfs-<version>.img survives intact when
   the missing-module check aborts a run, and how the Void kernel-install
   hook behaves in that case.
@@ -94,7 +125,7 @@ One machine, one setup. This is not a compatibility guarantee.
 - Whether the timeout hook ever runs in practice (it is in the image;
   no boot has hit the timeout).
 - Booting with a bcachefs-tools newer than 1.36.1 inside the initramfs.
-- Other distributions, and glibc-based Void.
+- Other distributions.
 
 ## Project policy
 
