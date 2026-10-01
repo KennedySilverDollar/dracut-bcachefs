@@ -125,7 +125,12 @@ glibc (initramfs build only, not booted):
 - Multi-device and encrypted bcachefs roots.
 - Whether the timeout hook ever runs in practice (it is in the image;
   no boot has hit the timeout).
-- Booting with a bcachefs-tools newer than 1.36.1 inside the initramfs.
+- Booting an initramfs built with revision 0.1.0_3. An image built with it
+  was compared with the image that booted: the bcachefs binary, module,
+  udev rule and timeout hook have identical SHA-256 prefixes (first 16 hex
+  digits). The only differences found were 8 unversioned lib*.so symlinks
+  and device-node timestamps. The booted image and this one were both built
+  before the comment edits in module.d/.
 - Other distributions.
 
 ## Project policy
