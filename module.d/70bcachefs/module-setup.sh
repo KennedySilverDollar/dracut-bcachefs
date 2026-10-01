@@ -54,9 +54,12 @@ installkernel() {
   # DKMS build failure leaves no bcachefs module for this kernel; dracut's
   # instmods would then skip it silently and produce an initramfs that
   # cannot mount a bcachefs root. Fail loudly instead.
-  if ! modinfo -k "$kernel" bcachefs > /dev/null 2>&1 \
-  && ! grep -qs 'bcachefs' "/lib/modules/$kernel/modules.builtin"; then
-    dfatal "70bcachefs: no bcachefs module found for kernel $kernel (DKMS build failed?)"
+  if ! modinfo -k "$kernel" bcachefs > /dev/null 2>&1 && ! grep -qs 'bcachefs' "/lib/modules/$kernel/modules.builtin"; then
+    if find "/lib/modules/$kernel" -name 'bcachefs.ko*' 2> /dev/null | grep -q . ; then
+      dfatal "70bcachefs: bcachefs.ko exists for kernel $kernel but is not in its module index (try: depmod -a $kernel)"
+    else
+      dfatal "70bcachefs: no bcachefs module found for kernel $kernel (DKMS build failed?)"
+    fi
     return 1
   fi
   dinfo "70bcachefs: bcachefs module $(modinfo -k "$kernel" -F version bcachefs 2> /dev/null) for kernel $kernel"
