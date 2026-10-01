@@ -107,6 +107,12 @@ glibc (initramfs build only, not booted):
   `ldd` lists for bcachefs.
 - Kernel without one (7.2.7_1): dracut stops with
   "installkernel failed in module bcachefs", exits 1, writes no image.
+- The same ten-kernel sweep as on musl (see "Other kernels" above) gave
+  identical results in the glibc stratum, including the module-index case
+  for 6.18.50_1. A later re-run (a fresh clone of this repository, 11 checks
+  per libc: the five kernels with a module plus the six without) also
+  checked, for the five with a module, that the image contains bcachefs.ko,
+  raid6_pq, xor.ko and /usr/bin/bcachefs, on both musl and glibc.
 
 ## Notes
 
@@ -114,10 +120,15 @@ glibc (initramfs build only, not booted):
   the image. If you use that option on a machine slow enough to hit the
   race the btrfs module guards against, add `rd.driver.pre=bcachefs` to
   the bootloader's kernel options.
-- In hostonly mode, dracut stored `root=UUID=` as bcachefs's sub-UUID on
-  the verified machine, while booting uses the primary UUID. The
-  workaround used was `--no-hostonly-cmdline` with `root=` set in the
-  bootloader. The cause was not traced into dracut itself.
+- In hostonly mode (checked on 7.2.8_1 with --hostonly-cmdline) the image
+  carries etc/cmdline.d/20-bcachefs.conf (` rd.driver.pre=bcachefs`) and
+  20-root-dev.conf. The latter has root=UUID= set to the sub-UUID, while
+  booting here uses the primary UUID, so the workaround used was
+  `--no-hostonly-cmdline` with `root=` set in the bootloader. Its rootflags
+  are copied from the running mount, so options such as degraded and
+  recovery_passes_exclude end up in the image. With --hostonly
+  --no-hostonly-cmdline, etc/cmdline.d exists but holds no files. The
+  cause of the sub-UUID was not traced into dracut itself.
 - A new kernel needs a bcachefs module built for it. If the DKMS build
   fails, the initramfs build now stops; fix the DKMS build first.
 - Running dracut inside a Bedrock stratum also pulls Bedrock's
