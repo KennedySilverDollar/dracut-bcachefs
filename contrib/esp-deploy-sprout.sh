@@ -22,7 +22,7 @@ done
 dracut --force --kver "$VER" --add bcachefs --no-hostonly-cmdline "$OUT"
 lsinitrd "$OUT" | grep -q 'kernel/fs/bcachefs/bcachefs.ko' \
   || { echo "bcachefs.ko NOT in initramfs: abort"; exit 1; }
-lsinitrd "$OUT" | grep -q 'lib/raid/raid6/raid6_pq' || { echo "raid6_pq missing: abort"; exit 1; }
+lsinitrd "$OUT" | grep -q 'raid6_pq' || { echo "raid6_pq missing: abort"; exit 1; }
 
 NEED=$(( ($(stat -c %s "$OUT") + $(stat -c %s "/boot/vmlinuz-$VER")) / 1024 ))
 AVAIL=$(df --output=avail -k "$ESP" | tail -1)
