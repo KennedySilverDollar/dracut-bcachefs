@@ -69,8 +69,8 @@ install() {
   # distros that don't provide one).
   inst_rules 64-bcachefs.rules
 
-  # Timeout hook for non-systemd initramfs builds, mirroring
-  # 70btrfs/btrfs_timeout.sh
+  # Timeout hook for non-systemd initramfs builds. Same hook point as
+  # 70btrfs; see bcachefs_timeout.sh for how it differs.
   if ! dracut_module_included "systemd"; then
     inst_hook initqueue/timeout 10 "$moddir/bcachefs_timeout.sh"
   fi
