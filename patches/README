@@ -1,0 +1,6 @@
+bcachefs-tools-772d5cd02-musl-statx.patch
+  Base: bcachefs-tools master at v1.39.6-2-g772d5cd02.
+  Purpose: path_subvol() via rustix::fs::statx, because libc::statx was
+  not found on the musl target (cause not traced).
+  Verified: the patched tree built on Void musl and `show-super` printed
+  version 1.39. May not apply to other commits.

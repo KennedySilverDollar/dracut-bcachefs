@@ -1,0 +1,31 @@
+diff --git a/src/util.rs b/src/util.rs
+index a3bf03aca..f1d8f3df1 100644
+--- a/src/util.rs
++++ b/src/util.rs
+@@ -71,22 +71,16 @@ const STATX_SUBVOL: libc::c_uint = 0x8000;
+ /// pair changes if and only if we cross into a different filesystem or a
+ /// different subvolume.
+ fn path_subvol(path: &Path) -> Option<(u64, u64)> {
+-    use std::os::unix::ffi::OsStrExt;
++    use rustix::fs::{statx, AtFlags, StatxFlags, CWD};
+ 
+-    let c_path = CString::new(path.as_os_str().as_bytes()).ok()?;
+-    let mut stx: libc::statx = unsafe { std::mem::zeroed() };
+-
+-    if unsafe {
+-        libc::statx(libc::AT_FDCWD, c_path.as_ptr(), 0, STATX_SUBVOL, &mut stx)
+-    } != 0 {
+-        return None;
+-    }
++    let stx = statx(CWD, path, AtFlags::empty(),
++                    StatxFlags::from_bits_retain(STATX_SUBVOL)).ok()?;
+ 
+     if stx.stx_mask & STATX_SUBVOL == 0 {
+         return None;
+     }
+ 
+-    Some((libc::makedev(stx.stx_dev_major, stx.stx_dev_minor),
++    Some((rustix::fs::makedev(stx.stx_dev_major, stx.stx_dev_minor),
+           stx.stx_subvol))
+ }
+ 
