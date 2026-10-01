@@ -107,6 +107,10 @@ glibc (initramfs build only, not booted):
   `ldd` lists for bcachefs.
 - Kernel without one (7.2.7_1): dracut stops with
   "installkernel failed in module bcachefs", exits 1, writes no image.
+- The same ten-kernel sweep as on musl (see "Other kernels" above) gave
+  identical results in the glibc stratum, including the module-index case
+  for 6.18.50_1. Only the build outcome and the messages were checked there,
+  not the image contents.
 
 ## Notes
 
