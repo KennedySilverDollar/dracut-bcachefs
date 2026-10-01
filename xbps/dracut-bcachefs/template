@@ -9,8 +9,9 @@ license="GPL-2.0-or-later"
 homepage="https://github.com/KennedySilverDollar/dracut-bcachefs"
 # Not intended for upstream submission (void-packages/dracut/
 # bcachefs-tools) -- independent package, built locally only.
-# metapackage=yes skips configure/make entirely; do_install() is
-# the only phase that runs.
+# No build_style and no distfiles: xbps-src runs only do_install().
+# The module files come from files/70bcachefs/ in the srcpkgs dir
+# (populated by scripts/sync-to-void-packages.sh).
 
 do_install(){
 vmkdir usr/lib/dracut/modules.d/70bcachefs
