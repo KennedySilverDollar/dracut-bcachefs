@@ -79,6 +79,16 @@ musl (initramfs booted):
     "installkernel failed in module bcachefs", exits 1, and writes no
     image.
 
+Other kernels on the same musl host (initramfs build only, written to /tmp,
+not booted):
+
+| Kernel | bcachefs module | Result |
+|---|---|---|
+| 7.2.3_1 | v1.39.4-39-g42cb08fe01fa | build succeeds, image has the module and its dependencies |
+| 6.18.52_1, 6.18.53_1, 6.18.54_1 | 1.36.1 | build succeeds, image has the module and its dependencies |
+| 6.18.49_1, 7.2.0_1, 7.2.6_1, 7.2.7_1, 7.3.0-rc4_1+ | none | dracut stops with "no bcachefs module found", exit 1, no image |
+| 6.18.50_1 | file present (v1.39.4-39-g42cb08fe01fa) but absent from modules.dep | dracut stops with "bcachefs.ko exists ... but is not in its module index (try: depmod -a)", exit 1, no image |
+
 glibc (initramfs build only, not booted):
 
 | Item | Version |
@@ -113,6 +123,15 @@ glibc (initramfs build only, not booted):
 - Running dracut inside a Bedrock stratum also pulls Bedrock's
   /bedrock/cross stubs and firmware into the image (seen on both musl and
   glibc). The image that booted on musl contains them too.
+- Module paths differ between kernels: on 6.18.x raid6_pq and xor are under
+  lib/raid6/ and crypto/, on 7.2.x under lib/raid/raid6/ and lib/raid/xor/.
+  The dependencies are resolved by module name, so the module itself does not
+  care; scripts that grep paths must not hardcode them.
+- A kernel whose bcachefs.ko is on disk but missing from modules.dep (as with
+  6.18.50_1 here) is treated like a missing module: dracut resolves modules
+  through that index, so the build would otherwise produce an image without
+  the module. Running `depmod -a <kernel>` would index it; this was not done
+  for the kernel above.
 
 ## Not verified
 
